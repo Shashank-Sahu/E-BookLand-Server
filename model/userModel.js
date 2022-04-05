@@ -1,10 +1,7 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const { Schema } = require("./dbConnection");
+const db = require("./dbConnection");
 
-mongoose.connect("mongodb://localhost:27017/ebook");
-
-const userSchema = mongoose.Schema({
+const userSchema = db.Schema({
     username: {
         type: String,
         required: true
@@ -21,9 +18,29 @@ const userSchema = mongoose.Schema({
     dataId: String
 });
 
-// const userDataSchema = mongoose.Schema({
+const userDataSchema = db.Schema({
+    user: {
+        type: String,
+        ref: 'User', //research
+        required: true,
+        unique: true
+    },
+    orders: [{
+        order_id: {
+            type: String,
+        },
+        payment_id: {
+            type: String,
+        },
+        signature: {
+            type: String,
+        }
+    }]
+})
 
-// })
+
+const User = new db.model("User", userSchema);
+const UserData = new db.model("UserData", userDataSchema);
 
 userSchema.pre("save", async function (next) {
     const hash = await bcrypt.hash(this.password, saltRounds);
@@ -31,6 +48,4 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-const User = new mongoose.model("User", userSchema);
-
-module.exports = User;
+module.exports = { User, UserData };
