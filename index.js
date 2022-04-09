@@ -7,6 +7,7 @@ const app = express();
 const port = 4000;
 const userController = require("./controllers/userController");
 const paymentController = require("./controllers/paymentController");
+const adminController = require("./controllers/adminController");
 
 app.use(cors());
 app.use(cookieParser());
@@ -19,7 +20,8 @@ app.use(userController);
 
 app.use(paymentController);
 
+app.use(adminController);
 
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
     console.log(`Server started at ${port}`);
 });
