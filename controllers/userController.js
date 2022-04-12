@@ -1,23 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const { verifyUser, loginUser, logoutUser, registerUser } = require("../handlers/userHandler");
+const { verifyUser, loginUser, logoutUser, registerUser, getUserList, modifyUser, deleteUser, changeUserPassword } = require("../handlers/userHandler");
 
 
+router.post("/register", registerUser);
 
+router.post("/login", loginUser);
 
-router.post("/api/user/register", registerUser);
+router.delete("/logout", logoutUser);
 
+router.get("/verify", verifyUser);
 
-router.post("/api/user/login", loginUser);
+router.get("/list", getUserList);
 
+router.post("/modifyUser", modifyUser);
 
-router.delete("/api/user/logout", logoutUser);
+router.delete("/deleteUser", deleteUser);
 
+router.post("/changePassword", changeUserPassword);
 
-router.get("/api/user/verify", verifyUser);
-
-router.get("/api/user/topUsers", (req, res) => {
+router.get("/topUsers", (req, res) => {
 
 });
-
 module.exports = router;

@@ -12,9 +12,12 @@ const orderObject = {
     }
 };
 const userSchema = new db.Schema({
-    username: {
+    firstName: {
         type: String,
         required: true
+    },
+    lastName: {
+        type: String,
     },
     email: {
         type: String,
@@ -25,7 +28,11 @@ const userSchema = new db.Schema({
         type: String,
         required: true
     },
-    dataId: String
+    role: {
+        type: String,
+        required: true,
+        uppercase: true
+    }
 });
 
 const userDataSchema = new db.Schema({

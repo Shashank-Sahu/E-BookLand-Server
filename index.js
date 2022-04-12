@@ -8,6 +8,7 @@ const port = 4000;
 const userController = require("./controllers/userController");
 const paymentController = require("./controllers/paymentController");
 const adminController = require("./controllers/adminController");
+const productController = require("./controllers/productController");
 
 app.use(cors());
 app.use(cookieParser());
@@ -16,11 +17,13 @@ app.use(express.json());
 
 ////////////////////////////////////////////////////////API Handling////////////////////////////////////////////////////////
 
-app.use(userController);
+app.use("/api/user", userController);
 
-app.use(paymentController);
+app.use("/api/payment", paymentController);
 
-app.use(adminController);
+app.use("/api/admin", adminController);
+
+app.use("/api/product", productController);
 
 app.listen(process.env.PORT || port, () => {
     console.log(`Server started at ${port}`);
