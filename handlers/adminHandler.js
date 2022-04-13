@@ -1,10 +1,18 @@
-const { Category } = require("../model/categoryModel");
-const { Banner } = require("../model/bannerModel");
-const { PromoCode } = require("../model/promoCodeModel");
+const { Category } = require("../model/AdminModels/categoryModel");
+const { Banner } = require("../model/AdminModels/bannerModel");
+const { PromoCode } = require("../model/AdminModels/promoCodeModel");
+const { Book } = require("../model/AdminModels/bookModel");
+const { NewArrival } = require("../model/AdminModels/HomePageActionModels/newArrivalModel");
+const { OnSale } = require("../model/AdminModels/HomePageActionModels/onSaleModel");
+const { FeaturedProduct } = require("../model/AdminModels/HomePageActionModels/featuredProductModel");
+const { BestSeller } = require("../model/AdminModels/HomePageActionModels/bestSellerModel");
+const db = require("../model/dbConnection");
 
+
+//////////////////////////////////////////////////////////////////////////Category Routes//////////////////////////////////////////////////////////////////////////
 
 const categoryList = (req, res) => {
-    Category.Find((err, docs) => {
+    Category.find((err, docs) => {
         if (err)
             res.status(500).json(err);
         else
@@ -21,8 +29,8 @@ const addCategory = (req, res) => {
         discount: categoryDiscount,
         showOnHome: categoryShow,
     });
-    newCategory.save().then((doc) => {
-        res.json({ category: doc });
+    newCategory.save().then((category) => {
+        res.json({ category });
     }).catch((err) => {
         res.status(409).json(err);
     });
@@ -58,6 +66,9 @@ const deleteCategory = (req, res) => {
     })
 };
 
+
+//////////////////////////////////////////////////////////////////////////Banner Routes//////////////////////////////////////////////////////////////////////////
+
 const listBanners = (req, res) => {
     Banner.find((err, banners) => {
         if (err)
@@ -70,7 +81,7 @@ const listBanners = (req, res) => {
 const addBanner = (req, res) => {
     const newBanner = new Banner({
         title: req.body.title,
-        subTitle: req.body.subTitle,
+        subtitle: req.body.subtitle,
         image: req.body.image,
         navigateTo: req.body.navigateTo,
         book: req.body.book
@@ -88,7 +99,7 @@ const modifyBanner = (req, res) => {
         req.body.id,
         {
             title: req.body.title,
-            subTitle: req.body.subTitle,
+            subtitle: req.body.subtitle,
             image: req.body.image,
             navigateTo: req.body.navigateTo,
             book: req.body.book
@@ -103,7 +114,7 @@ const modifyBanner = (req, res) => {
 };
 
 const deleteBanner = (req, res) => {
-    Banner.findIdAndDelete(req.body.id, (err, doc) => {
+    Banner.findByIdAndDelete(req.body.id, (err, doc) => {
         if (err)
             res.status(500).json(err);
         else
@@ -111,8 +122,10 @@ const deleteBanner = (req, res) => {
     });
 };
 
+//////////////////////////////////////////////////////////////////////////Book Routes//////////////////////////////////////////////////////////////////////////
+
 const deleteBook = (req, res) => {
-    Book.findIdAndDelete(req.body.id, (err, doc) => {
+    Book.findByIdAndDelete(req.body.id, (err, doc) => {
         if (err)
             res.status(500).json(err);
         else
@@ -199,6 +212,8 @@ const listBooks = (req, res) => {
     });
 };
 
+//////////////////////////////////////////////////////////////////////////PromoCode Routes//////////////////////////////////////////////////////////////////////////
+
 const listPromoCodes = (req, res) => {
     PromoCode.find((err, promoCodes) => {
         if (err)
@@ -212,10 +227,10 @@ const addPromoCode = (req, res) => {
     const newPromoCode = new PromoCode({
         code: req.body.code,
         desc: req.body.desc,
-        start: req.body.start,
-        end: req.body.end,
+        start: new Date(req.body.start),
+        end: new Date(req.body.end),
         discount: req.body.discount,
-        category: req.body.category
+        categories: req.body.categories
     });
 
     newPromoCode.save().then((promoCode) => {
@@ -231,12 +246,12 @@ const modifyPromoCode = (req, res) => {
         {
             code: req.body.code,
             desc: req.body.desc,
-            start: req.body.start,
-            end: req.body.end,
+            start: new Date(req.body.start),
+            end: new Date(req.body.end),
             discount: req.body.discount,
-            category: req.body.category
+            categories: req.body.categories
         },
-        { new: true },
+        { new: true, runSettersOnQuery: true },
         (err, promoCode) => {
             if (err)
                 res.status(500).json(err);
@@ -246,7 +261,132 @@ const modifyPromoCode = (req, res) => {
 };
 
 const deletePromoCode = (req, res) => {
-    PromoCode.findIdAndDelete(req.body.id, (err, doc) => {
+    PromoCode.findByIdAndDelete(req.body.id, (err, doc) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.status(200).json(doc);
+    });
+};
+
+//////////////////////////////////////////////////////////////////////////HomePage Action Routes//////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////New Arrivals Routes////////////////////////////////////////
+const addNewArrival = (req, res) => {
+    const newArrival = new NewArrival({
+        bookId: db.Types.ObjectId(req.body.bookId)
+    });
+    newArrival.save().then((newArrival) => {
+        res.json({ newArrival });
+    }).catch((err) => {
+        res.status(500).json(err);
+    });
+};
+
+const listNewArrivals = (req, res) => {
+    NewArrival.find().populate('bookId').exec((err, newArrivals) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.json(newArrivals);
+    });
+};
+
+const deleteNewArrival = (req, res) => {
+    NewArrival.findByIdAndDelete(req.body.id, (err, doc) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.status(200).json(doc);
+    });
+};
+
+
+////////////////////////////////////////OnSale Routes////////////////////////////////////////
+const addOnSale = (req, res) => {
+    const newOnSale = new OnSale({
+        bookId: db.Types.ObjectId(req.body.bookId)
+    });
+    newOnSale.save().then((onSale) => {
+        res.json({ onSale });
+    }).catch((err) => {
+        res.status(500).json(err);
+    });
+};
+
+const listOnSales = (req, res) => {
+    OnSale.find().populate('bookId').exec((err, onSales) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.json(onSales);
+    });
+};
+
+const deleteOnSale = (req, res) => {
+    OnSale.findByIdAndDelete(req.body.id, (err, doc) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.status(200).json(doc);
+    });
+};
+
+
+////////////////////////////////////////Featured Product Routes////////////////////////////////////////
+const addFeaturedProduct = (req, res) => {
+    const newFeaturedProduct = new FeaturedProduct({
+        bookId: db.Types.ObjectId(req.body.bookId)
+    });
+    newFeaturedProduct.save().then((featuredProduct) => {
+        res.json({ featuredProduct });
+    }).catch((err) => {
+        res.status(500).json(err);
+    });
+};
+
+const listFeaturedProducts = (req, res) => {
+    FeaturedProduct.find().populate('bookId').exec((err, featuredProducts) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.json(featuredProducts);
+    });
+};
+
+const deleteFeaturedProduct = (req, res) => {
+    FeaturedProduct.findByIdAndDelete(req.body.id, (err, doc) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.status(200).json(doc);
+    });
+};
+
+
+////////////////////////////////////////BestSeller Routes////////////////////////////////////////
+const addBestSeller = (req, res) => {
+    const newBestSeller = new BestSeller({
+        bookId: db.Types.ObjectId(req.body.bookId)
+    });
+    newBestSeller.save().then((bestSeller) => {
+        res.json({ bestSeller });
+    }).catch((err) => {
+        res.status(500).json(err);
+    });
+};
+
+const listBestSellers = (req, res) => {
+    BestSeller.find().populate('bookId').exec((err, bestSellers) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.json(bestSellers);
+    });
+};
+
+const deleteBestSeller = (req, res) => {
+    BestSeller.findByIdAndDelete(req.body.id, (err, doc) => {
         if (err)
             res.status(500).json(err);
         else
@@ -270,6 +410,18 @@ module.exports = {
     addPromoCode,
     listPromoCodes,
     modifyPromoCode,
-    deletePromoCode
+    deletePromoCode,
+    addNewArrival,
+    listNewArrivals,
+    deleteNewArrival,
+    addOnSale,
+    listOnSales,
+    deleteOnSale,
+    addFeaturedProduct,
+    deleteFeaturedProduct,
+    listFeaturedProducts,
+    addBestSeller,
+    deleteBestSeller,
+    listBestSellers
 }
 

@@ -1,14 +1,14 @@
-const db = require("./dbConnection");
+const db = require("../dbConnection");
 
 
 const bannerSchema = new db.Schema({
     title: {
         type: String
     },
-    subTitle: {
+    subtitle: {
         type: String
     },
-    image: {
+    image: { //TODO: ImageKit
         type: String,
         required: true
     },

@@ -1,4 +1,4 @@
-const db = require("./dbConnection");
+const db = require("../dbConnection");
 const bcrypt = require("bcrypt");
 const orderObject = {
     order_id: {
@@ -31,7 +31,11 @@ const userSchema = new db.Schema({
     role: {
         type: String,
         required: true,
-        uppercase: true
+        uppercase: true,
+    },
+    isActive: {
+        type: Boolean,
+        required: true
     }
 });
 

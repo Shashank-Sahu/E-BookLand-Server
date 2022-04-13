@@ -1,6 +1,6 @@
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
-const { UserData } = require("../model/userModel");
+const { UserData } = require("../model/UserModels/userModel");
 const instance = new Razorpay({ //TODO: create instance once or everytime wehn a order is placed?
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET

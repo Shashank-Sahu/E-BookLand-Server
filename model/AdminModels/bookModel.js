@@ -1,4 +1,4 @@
-const db = require("./dbConnection");
+const db = require("../dbConnection");
 
 
 const bookSchema = new db.Schema({
@@ -22,7 +22,6 @@ const bookSchema = new db.Schema({
     },
     category: {
         type: String,
-        // required: true,
         lowercase: true
     },
     subCategory: {
@@ -85,7 +84,7 @@ const bookSchema = new db.Schema({
         type: String,
         required: true
     },
-    image: {
+    image: { //TODO: ImageKit
         type: String,
         required: true
     },

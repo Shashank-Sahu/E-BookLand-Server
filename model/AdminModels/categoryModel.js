@@ -1,4 +1,4 @@
-const db = require("./dbConnection");
+const db = require("../dbConnection");
 
 
 const categorySchema = new db.Schema({

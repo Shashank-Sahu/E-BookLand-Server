@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const path = require("path");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
@@ -10,7 +9,7 @@ const paymentController = require("./controllers/paymentController");
 const adminController = require("./controllers/adminController");
 const productController = require("./controllers/productController");
 
-app.use(cors());
+app.use(cors()); //TODO: add origin and credentials
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

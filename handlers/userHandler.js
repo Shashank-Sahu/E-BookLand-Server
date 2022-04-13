@@ -1,4 +1,4 @@
-const { User, UserData } = require("../model/userModel");
+const { User, UserData } = require("../model/UserModels/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const tokenExpiry = "600s";
@@ -17,8 +17,6 @@ const setTokens = (res, user) => {
             httpOnly: true
         });
 };
-
-
 
 ////////////////////////////////////////////////////////User Token Verification/Refresh////////////////////////////////////////////////////////
 
@@ -42,9 +40,8 @@ const verifyUser = (req, res) => {
     }
 };
 
-
-
 ////////////////////////////////////////////////////////User Login////////////////////////////////////////////////////////
+
 const loginUser = (req, res) => {
     const userEmail = req.body.email;
     const userPassword = req.body.password;
@@ -59,8 +56,6 @@ const loginUser = (req, res) => {
             res.status(401).json({ message: "Invalid Credentials" });
     });
 };
-
-
 
 ////////////////////////////////////////////////////////User Logout////////////////////////////////////////////////////////
 
@@ -78,6 +73,7 @@ const registerUser = (req, res) => {
     const userEmail = req.body.email;
     const userPassword = req.body.password;
     const userRole = req.body.role || "CONSUMER";
+    const userIsActive = true; //TODO: Modify with a email verification
     const newUser = new User({
         firstName: userFirstName,
         lastName: userLastName,
@@ -111,16 +107,16 @@ const getUserList = (req, res) => {
 const modifyUser = async (req, res) => {
     const newUserFirstName = req.body.firstName;
     const newUserLastName = req.body.lastName;
-    const newAdminRole = req.body.role || "CONSUMER";
+    const newUserRole = req.body.role || "CONSUMER";
     const userEmail = req.body.email;
     User.findOneAndUpdate(
         { email: userEmail },
         {
             firstName: newUserFirstName,
             lastName: newUserLastName,
-            role: newAdminRole
+            role: newUserRole
         },
-        { new: true },
+        { new: true, runSettersOnQuery: true },
         (err, user) => {
             if (err)
                 res.status(500).json(err);
@@ -139,6 +135,8 @@ const deleteUser = (req, res) => {
             res.status(500).json(err);
         }
         else {
+            res.clearCookie("token");
+            res.clearCookie("refreshToken");
             await UserData.findOneAndDelete({ user: req.body.email });
             res.status(200).json(doc);
         }

@@ -1,5 +1,10 @@
-const db = require("./dbConnection");
+const db = require("../dbConnection");
 
+const category = {
+    type: String,
+    required: true,
+    lowercase: true
+}
 
 const promoCodeSchema = new db.Schema({
     code: {
@@ -24,11 +29,7 @@ const promoCodeSchema = new db.Schema({
         min: 0,
         max: 100
     },
-    category: [{
-        type: String,
-        required: true,
-        lowercase: true
-    }]
+    categories: [category]
 });
 
 
