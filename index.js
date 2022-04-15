@@ -8,11 +8,19 @@ const userController = require("./controllers/userController");
 const paymentController = require("./controllers/paymentController");
 const adminController = require("./controllers/adminController");
 const productController = require("./controllers/productController");
+const fileUpload = require("express-fileupload");
 
-app.use(cors()); //TODO: add origin and credentials
+app.use(cors({
+    origin: ['http://localhost:3000'],
+    credentials: true
+}));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(fileUpload({
+    limits: { fileSize: 5 * 1024 * 1024 },
+    abortOnLimit: true
+}));
 
 ////////////////////////////////////////////////////////API Handling////////////////////////////////////////////////////////
 

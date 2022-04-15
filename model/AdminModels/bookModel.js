@@ -6,10 +6,10 @@ const bookSchema = new db.Schema({
         type: String,
         required: true
     },
-    authors: [{
-        type: String,
+    authors: {
+        type: [String],
         required: true
-    }],
+    },
     markedPrice: {
         type: Number,
         required: true
@@ -84,8 +84,21 @@ const bookSchema = new db.Schema({
         type: String,
         required: true
     },
-    image: { //TODO: ImageKit
-        type: String,
+    image: {
+        type: {
+            imageId: {
+                type: String,
+                required: true
+            },
+            imageName: {
+                type: String,
+                required: true
+            },
+            imageUrl: {
+                type: String,
+                required: true
+            }
+        },
         required: true
     },
     details: {

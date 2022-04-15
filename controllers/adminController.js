@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { categoryList, addCategory, modifyCategory, deleteCategory, listBanners, addBanner, modifyBanner, deleteBanner, deleteBook, modifyBook, addBook, listBooks, listPromoCodes, addPromoCode, modifyPromoCode, deletePromoCode, addNewArrival, deleteNewArrival, listNewArrivals, addFeaturedProduct, deleteFeaturedProduct, listFeaturedProducts, addOnSale, deleteOnSale, listOnSales, addBestSeller, deleteBestSeller, listBestSellers } = require("../handlers/adminHandler");
+const { uploadNewImage } = require("../middlewares/imageMiddleware");
 
 //////////////////////////////////////////////////////////////////////////DashBoard Routes//////////////////////////////////////////////////////////////////////////
 //What is 'Books':int in Admin Dashboard?
@@ -22,9 +23,9 @@ router.get("/totalOrdersPlaced", (req, res) => {
 //TODO: BulkHead functionality
 router.get("/bookList", listBooks);
 
-router.post("/addBook", addBook);
+router.post("/addBook", uploadNewImage, addBook);
 
-router.patch("/modifyBook", modifyBook);
+router.patch("/modifyBook", uploadNewImage, modifyBook);
 
 router.delete("/deleteBook", deleteBook);
 
@@ -42,9 +43,9 @@ router.delete("/deleteCategory", deleteCategory);
 
 router.get("/bannerList", listBanners);
 
-router.post("/addBanner", addBanner);
+router.post("/addBanner", uploadNewImage, addBanner);
 
-router.patch("/modifyBanner", modifyBanner);
+router.patch("/modifyBanner", uploadNewImage, modifyBanner);
 
 router.delete("/deleteBanner", deleteBanner);
 

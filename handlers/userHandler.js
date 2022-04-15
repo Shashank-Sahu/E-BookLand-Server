@@ -45,15 +45,21 @@ const verifyUser = (req, res) => {
 const loginUser = (req, res) => {
     const userEmail = req.body.email;
     const userPassword = req.body.password;
+    console.log(userPassword);
     User.findOne({ email: userEmail }, (err, user) => {
         if (err)
             res.status(500).json(err);
-        if (bcrypt.compareSync(userPassword, user.password)) {
-            setTokens(res, user);
-            res.json({ user });
+        if (user) {
+            if (bcrypt.compareSync(userPassword, user.password)) {
+                setTokens(res, user);
+                res.json({ user });
+            }
+            else
+                res.status(401).json({ message: "Invalid Credentials" });
         }
-        else
-            res.status(401).json({ message: "Invalid Credentials" });
+        else {
+            res.status(404).json({ message: "User does not exist" });
+        }
     });
 };
 
@@ -79,7 +85,8 @@ const registerUser = (req, res) => {
         lastName: userLastName,
         email: userEmail,
         password: userPassword,
-        role: userRole
+        role: userRole,
+        isActive: userIsActive
     });
     newUser.save().then((user) => {
         setTokens(res, user);

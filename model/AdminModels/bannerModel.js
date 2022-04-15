@@ -8,8 +8,21 @@ const bannerSchema = new db.Schema({
     subtitle: {
         type: String
     },
-    image: { //TODO: ImageKit
-        type: String,
+    image: {
+        type: {
+            imageId: {
+                type: String,
+                required: true
+            },
+            imageName: {
+                type: String,
+                required: true
+            },
+            imageUrl: {
+                type: String,
+                required: true
+            }
+        },
         required: true
     },
     navigateTo: {

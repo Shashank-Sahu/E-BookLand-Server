@@ -7,7 +7,7 @@ const { OnSale } = require("../model/AdminModels/HomePageActionModels/onSaleMode
 const { FeaturedProduct } = require("../model/AdminModels/HomePageActionModels/featuredProductModel");
 const { BestSeller } = require("../model/AdminModels/HomePageActionModels/bestSellerModel");
 const db = require("../model/dbConnection");
-
+const { deleteImage } = require("../middlewares/imageMiddleware");
 
 //////////////////////////////////////////////////////////////////////////Category Routes//////////////////////////////////////////////////////////////////////////
 
@@ -104,12 +104,14 @@ const modifyBanner = (req, res) => {
             navigateTo: req.body.navigateTo,
             book: req.body.book
         },
-        { new: true },
         (err, banner) => {
             if (err)
                 res.status(500).json(err);
-            else
+            else {
+                deleteImage(banner.image.imageId);
+                console.log(banner);
                 res.json({ banner });
+            }
         });
 };
 
@@ -117,8 +119,10 @@ const deleteBanner = (req, res) => {
     Banner.findByIdAndDelete(req.body.id, (err, doc) => {
         if (err)
             res.status(500).json(err);
-        else
+        else {
+            deleteImage(doc.image.imageId);
             res.status(200).json(doc);
+        }
     });
 };
 
@@ -128,8 +132,10 @@ const deleteBook = (req, res) => {
     Book.findByIdAndDelete(req.body.id, (err, doc) => {
         if (err)
             res.status(500).json(err);
-        else
+        else {
+            deleteImage(doc.image.imageId);
             res.status(200).json(doc);
+        }
     });
 };
 
@@ -160,12 +166,14 @@ const modifyBook = (req, res) => {
             image: req.body.image,
             details: req.body.details
         },
-        { new: true, runSettersOnQuery: true },
+        { runSettersOnQuery: true },
         (err, book) => {
             if (err)
                 res.status(500).json(err);
-            else
+            else {
+                deleteImage(book.image.imageId);
                 res.json({ book });
+            }
         }
     );
 };
@@ -200,7 +208,7 @@ const addBook = (req, res) => {
         res.json({ book });
     }).catch((err) => {
         res.status(400).json(err);
-    })
+    });
 };
 
 const listBooks = (req, res) => {
